@@ -1,0 +1,30 @@
+{
+  "_instructions": "Edit this file to update the site — no HTML/CSS needed. 'spotifyEmbedUrl' is the iframe URL for the Listen section, e.g. https://open.spotify.com/embed/artist/<ID>?utm_source=generator&theme=0 (leave empty for a placeholder). Each act needs a name; role and description are optional. Each link needs a url; 'platform' picks the icon (spotify, apple, youtube, bandcamp, soundcloud — anything else falls back to a generic link icon) and 'label' is the button text. Add as many acts or links as you want, in any order — the site just reads this list.",
+  "spotifyEmbedUrl": "",
+  "acts": [
+    {
+      "name": "Djaunt",
+      "role": "Solo act — writing, performance, engineering",
+      "description": "The solo project. Everything under this name is written, performed, and produced end to end in-house.",
+      "links": []
+    },
+    {
+      "name": "We All Perish",
+      "role": "Engineering & production",
+      "description": "Records I've tracked, mixed, and/or mastered for We All Perish.",
+      "links": [
+        {
+          "platform": "linkshare",
+          "label": "Listen — \"Overcome\" (all platforms)",
+          "url": "https://social.tunecore.com/linkShare?linkid=uaMyHheb6n2DoLXFPgbmYQ"
+        }
+      ]
+    },
+    {
+      "name": "Gongonzabar Farbin and the Fernando Poos",
+      "role": "Engineering & production",
+      "description": "Records I've tracked, mixed, and/or mastered for Gongonzabar Farbin and the Fernando Poos.",
+      "links": []
+    }
+  ]
+}

@@ -290,10 +290,25 @@
     text-align: center;
     padding: var(--dj-space-4);
   }
-  .everywhere {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--dj-space-2);
+  .embed-placeholder code {
+    font-family: var(--dj-font-mono);
+    color: var(--dj-accent);
+  }
+  .listen-note {
+    display: inline-block;
+    border-bottom: none;
+  }
+  .act-loading {
+    font-family: var(--dj-font-mono);
+    font-size: var(--dj-text-sm);
+    color: var(--dj-text-muted);
+  }
+  .act-links-empty {
+    font-family: var(--dj-font-mono);
+    font-size: var(--dj-text-xs);
+    letter-spacing: var(--dj-tracking-label);
+    text-transform: uppercase;
+    color: var(--dj-text-muted);
   }
 
   /* ---- Studio teaser ---- */
@@ -437,49 +452,8 @@
       <span class="section-index">02</span>
       <h2>The acts</h2>
     </div>
-    <div class="acts">
-
-      <article class="act-card">
-        <div class="act-head">
-          <h3>Djaunt</h3>
-          <span class="act-role">Solo act — writing, performance, engineering</span>
-        </div>
-        <p class="act-desc">
-          The solo project. Everything under this name is written, performed,
-          and produced end to end in-house.
-        </p>
-        <div class="platform-links">
-          <a class="platform-link" href="#"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 17H7A5 5 0 0 1 7 7h2"/><path d="M15 7h2a5 5 0 1 1 0 10h-2"/><line x1="8" y1="12" x2="16" y2="12"/></svg>Listen — all platforms</a>
-        </div>
-      </article>
-
-      <article class="act-card">
-        <div class="act-head">
-          <h3>We All Perish</h3>
-          <span class="act-role">Engineering &amp; production</span>
-        </div>
-        <p class="act-desc">
-          Records I've tracked, mixed, and/or mastered for We All Perish.
-        </p>
-        <div class="platform-links">
-          <a class="platform-link" href="https://social.tunecore.com/linkShare?linkid=uaMyHheb6n2DoLXFPgbmYQ"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 17H7A5 5 0 0 1 7 7h2"/><path d="M15 7h2a5 5 0 1 1 0 10h-2"/><line x1="8" y1="12" x2="16" y2="12"/></svg>Listen — "Overcome" (all platforms)</a>
-        </div>
-      </article>
-
-      <article class="act-card">
-        <div class="act-head">
-          <h3>Gongonzabar Farbin and the Fernando Poos</h3>
-          <span class="act-role">Engineering &amp; production</span>
-        </div>
-        <p class="act-desc">
-          Records I've tracked, mixed, and/or mastered for Gongonzabar Farbin
-          and the Fernando Poos.
-        </p>
-        <div class="platform-links">
-          <a class="platform-link" href="#"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 17H7A5 5 0 0 1 7 7h2"/><path d="M15 7h2a5 5 0 1 1 0 10h-2"/><line x1="8" y1="12" x2="16" y2="12"/></svg>Listen — all platforms</a>
-        </div>
-      </article>
-
+    <div class="acts" id="acts-list">
+      <p class="act-loading">Loading acts…</p>
     </div>
   </section>
 
@@ -491,20 +465,12 @@
 
     <div class="listen-card">
       <p class="eyebrow">Now playing</p>
-      <!-- Swap this for a real Spotify embed once we have the artist/album URI:
-           <iframe src="https://open.spotify.com/embed/artist/<ID>?utm_source=generator&theme=0"
-                   width="100%" height="152" frameborder="0" allowfullscreen
-                   allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-                   loading="lazy"></iframe> -->
-      <div class="embed-frame">
-        <div class="embed-placeholder">Spotify player goes here — drop in the artist embed URL</div>
+      <div class="embed-frame" id="embed-frame">
+        <div class="embed-placeholder">Spotify player goes here — set <code>spotifyEmbedUrl</code> in data/links.json</div>
       </div>
     </div>
 
-    <p class="eyebrow">Everywhere else</p>
-    <div class="everywhere">
-      <a class="platform-link" href="#"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 17H7A5 5 0 0 1 7 7h2"/><path d="M15 7h2a5 5 0 1 1 0 10h-2"/><line x1="8" y1="12" x2="16" y2="12"/></svg>Listen — all platforms (Djaunt)</a>
-    </div>
+    <p class="link-quiet listen-note">Full links for every act are in <a href="#acts">The acts</a>, above.</p>
   </section>
 
   <section id="studio" class="section-pad">
@@ -526,5 +492,100 @@
     <a href="https://github.com/tory37/djaunt-branding">brand guidelines at github.com/tory37/djaunt-branding</a>
   </footer>
 </div>
+<script>
+(function () {
+  var ICONS = {
+    spotify: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5-1 4-1 4 1 4 1"/><path d="M7 10.5s2-1.5 5-1.5 5 1.5 5 1.5"/><path d="M9 17.5s1-.5 3-.5 3 .5 3 .5"/></svg>',
+    apple: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>',
+    youtube: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M10 9l5 3-5 3z"/></svg>',
+    bandcamp: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="3"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="2" y1="7" x2="7" y2="7"/><line x1="2" y1="17" x2="7" y2="17"/><line x1="17" y1="17" x2="22" y2="17"/><line x1="17" y1="7" x2="22" y2="7"/></svg>',
+    soundcloud: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2a10 10 0 1 0 10 10"/><path d="M12 2v10l7 4"/></svg>',
+    "default": '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 17H7A5 5 0 0 1 7 7h2"/><path d="M15 7h2a5 5 0 1 1 0 10h-2"/><line x1="8" y1="12" x2="16" y2="12"/></svg>'
+  };
+
+  function iconFor(platform) {
+    return ICONS[String(platform || '').toLowerCase()] || ICONS["default"];
+  }
+
+  function renderActs(acts) {
+    var wrap = document.getElementById('acts-list');
+    wrap.innerHTML = '';
+    (acts || []).forEach(function (act) {
+      var card = document.createElement('article');
+      card.className = 'act-card';
+
+      var head = document.createElement('div');
+      head.className = 'act-head';
+      var h3 = document.createElement('h3');
+      h3.textContent = act.name || '';
+      var role = document.createElement('span');
+      role.className = 'act-role';
+      role.textContent = act.role || '';
+      head.appendChild(h3);
+      head.appendChild(role);
+      card.appendChild(head);
+
+      if (act.description) {
+        var desc = document.createElement('p');
+        desc.className = 'act-desc';
+        desc.textContent = act.description;
+        card.appendChild(desc);
+      }
+
+      var linksWrap = document.createElement('div');
+      linksWrap.className = 'platform-links';
+      var links = act.links || [];
+      if (links.length) {
+        links.forEach(function (link) {
+          var a = document.createElement('a');
+          a.className = 'platform-link';
+          a.href = link.url;
+          a.target = '_blank';
+          a.rel = 'noopener';
+          var iconSpan = document.createElement('span');
+          iconSpan.innerHTML = iconFor(link.platform);
+          a.appendChild(iconSpan.firstChild);
+          a.appendChild(document.createTextNode(link.label || link.platform || 'Listen'));
+          linksWrap.appendChild(a);
+        });
+      } else {
+        var empty = document.createElement('span');
+        empty.className = 'act-links-empty';
+        empty.textContent = 'Links coming soon';
+        linksWrap.appendChild(empty);
+      }
+      card.appendChild(linksWrap);
+
+      wrap.appendChild(card);
+    });
+  }
+
+  function renderEmbed(url) {
+    if (!url) return;
+    var frame = document.getElementById('embed-frame');
+    frame.innerHTML = '';
+    var iframe = document.createElement('iframe');
+    iframe.src = url;
+    iframe.width = '100%';
+    iframe.height = '152';
+    iframe.loading = 'lazy';
+    iframe.setAttribute('frameborder', '0');
+    iframe.setAttribute('allow', 'autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture');
+    frame.appendChild(iframe);
+  }
+
+  fetch('data/links.json')
+    .then(function (r) { return r.json(); })
+    .then(function (data) {
+      renderActs(data.acts);
+      renderEmbed(data.spotifyEmbedUrl);
+    })
+    .catch(function (err) {
+      var wrap = document.getElementById('acts-list');
+      wrap.innerHTML = '<p class="act-loading">Couldn\'t load data/links.json — check the file is valid JSON.</p>';
+      console.error('Could not load data/links.json', err);
+    });
+})();
+</script>
 </body>
 </html>
