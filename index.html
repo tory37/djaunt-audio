@@ -13,7 +13,14 @@
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#050F11">
 <link rel="stylesheet" href="assets/tokens.css">
-<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700&family=IBM+Plex+Sans:wght@400;500&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/fonts.css">
+<link rel="stylesheet" href="assets/components/hero/hero.css">
+<link rel="stylesheet" href="assets/components/buttons/buttons.css">
+<link rel="stylesheet" href="assets/components/badge/badge.css">
+<link rel="stylesheet" href="assets/components/divided-list/divided-list.css">
+<link rel="stylesheet" href="assets/components/skeleton/skeleton.css">
+<link rel="stylesheet" href="assets/components/section-nav/section-nav.css">
+<script src="assets/components/section-nav/section-nav.js" defer></script>
 <style>
   * { box-sizing: border-box; }
   html { scroll-behavior: smooth; }
@@ -25,21 +32,8 @@
     line-height: var(--dj-leading-body);
   }
   a { color: inherit; }
-  .bg-mark {
-    position: fixed;
-    top: -14%;
-    right: -12%;
-    width: 640px;
-    max-width: 75vw;
-    height: auto;
-    opacity: 0.05;
-    pointer-events: none;
-    user-select: none;
-    z-index: 0;
-  }
   .wrap {
     position: relative;
-    z-index: 1;
     max-width: 1000px;
     margin: 0 auto;
     padding: 0 var(--dj-space-4);
@@ -49,7 +43,7 @@
   .nav {
     position: sticky;
     top: 0;
-    z-index: 10;
+    z-index: 40;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -65,20 +59,15 @@
     gap: var(--dj-space-2);
   }
   .nav-brand img { height: 22px; width: auto; display: block; }
-  .nav-links {
-    display: flex;
-    gap: var(--dj-space-5);
-    font-family: var(--dj-font-mono);
-    font-size: var(--dj-text-xs);
-    letter-spacing: var(--dj-tracking-label);
-    text-transform: uppercase;
+  /* Section nav sits inside our own sticky/bordered bar, alongside the logo,
+     instead of pinning and bordering itself. */
+  .nav .dj-section-nav {
+    position: static;
+    padding: 0;
+    border: 0;
+    background: none;
+    overflow: visible;
   }
-  .nav-links a {
-    text-decoration: none;
-    color: var(--dj-text-muted);
-    transition: color var(--dj-dur-fast) var(--dj-ease);
-  }
-  .nav-links a:hover, .nav-links a:focus-visible { color: var(--dj-accent-hi); }
 
   section { scroll-margin-top: 64px; }
 
@@ -95,57 +84,6 @@
     letter-spacing: var(--dj-tracking-display);
     margin: 0;
   }
-
-  /* ---- Hero ---- */
-  .hero {
-    padding: var(--dj-space-9) 0 var(--dj-space-8);
-  }
-  .hero h1 {
-    font-weight: 700;
-    font-size: clamp(var(--dj-text-4xl), 6vw + 1rem, var(--dj-text-5xl));
-    line-height: var(--dj-leading-tight);
-    margin-bottom: var(--dj-space-3);
-  }
-  .hero .lede {
-    color: var(--dj-text-muted);
-    max-width: 58ch;
-    font-size: var(--dj-text-lg);
-    margin: 0 0 var(--dj-space-6);
-  }
-  .hero-ctas {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: var(--dj-space-5);
-  }
-  .btn-primary {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--dj-space-2);
-    background: var(--dj-accent);
-    color: var(--dj-on-accent);
-    font-family: var(--dj-font-mono);
-    font-size: var(--dj-text-sm);
-    letter-spacing: var(--dj-tracking-label);
-    text-transform: uppercase;
-    text-decoration: none;
-    padding: var(--dj-space-3) var(--dj-space-5);
-    border-radius: var(--dj-radius-sm);
-    transition: box-shadow var(--dj-dur-base) var(--dj-ease), transform var(--dj-dur-fast) var(--dj-ease);
-  }
-  .btn-primary:hover, .btn-primary:focus-visible { box-shadow: var(--dj-glow); }
-  .btn-primary:active { transform: translateY(1px); }
-  .link-quiet {
-    font-family: var(--dj-font-mono);
-    font-size: var(--dj-text-sm);
-    letter-spacing: var(--dj-tracking-label);
-    text-transform: uppercase;
-    text-decoration: none;
-    color: var(--dj-text-muted);
-    border-bottom: var(--dj-border-width) solid transparent;
-    transition: color var(--dj-dur-fast) var(--dj-ease), border-color var(--dj-dur-fast) var(--dj-ease);
-  }
-  .link-quiet:hover, .link-quiet:focus-visible { color: var(--dj-text); border-color: currentColor; }
 
   /* ---- Section headers ---- */
   .section-head {
@@ -169,6 +107,7 @@
   }
   section + section { margin-top: var(--dj-space-9); }
   .section-pad { padding-bottom: var(--dj-space-8); }
+  .wrap > .dj-hero + section { margin-top: var(--dj-space-8); }
 
   /* ---- About ---- */
   .about-grid {
@@ -195,69 +134,42 @@
     .about-grid { grid-template-columns: 1fr; }
   }
 
-  /* ---- Acts ---- */
-  .acts { display: flex; flex-direction: column; gap: var(--dj-space-5); }
-  .act-card {
-    --row-accent: var(--dj-accent);
-    border: var(--dj-border-width) solid var(--dj-border);
-    border-left: 2px solid var(--row-accent);
-    border-radius: var(--dj-radius-sm);
-    background: var(--dj-surface);
-    padding: var(--dj-space-6);
-    transition: box-shadow var(--dj-dur-base) var(--dj-ease);
-  }
-  .act-card:hover, .act-card:focus-within {
-    box-shadow: 0 0 24px color-mix(in srgb, var(--row-accent) 18%, transparent);
-  }
-  .act-head {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: baseline;
-    justify-content: space-between;
-    gap: var(--dj-space-3);
-    margin-bottom: var(--dj-space-2);
-  }
-  .act-card h3 {
+  /* ---- Acts (divided-list, marker colored per act via the categorical
+     accent tokens — three acts coexisting on one themed surface, per
+     BRANDING.md's "categorical / multi-accent surfaces" guidance) ---- */
+  .acts .dj-divided-item h3 {
     font-weight: 600;
     font-size: var(--dj-text-xl);
+    margin: 0 0 var(--dj-space-1);
+  }
+  .acts .dj-divided-item p {
+    max-width: 62ch;
+    font-size: var(--dj-text-base);
   }
   .act-role {
+    display: block;
     font-family: var(--dj-font-mono);
     font-size: var(--dj-text-xs);
     letter-spacing: var(--dj-tracking-label);
     text-transform: uppercase;
     color: var(--dj-text-muted);
+    margin: 0 0 var(--dj-space-3);
   }
-  .act-card p.act-desc {
-    color: var(--dj-text-muted);
-    max-width: 62ch;
-    margin: 0 0 var(--dj-space-5);
-  }
-  .platform-links {
+  .act-links {
     display: flex;
     flex-wrap: wrap;
-    gap: var(--dj-space-2);
-  }
-  .platform-link {
-    display: inline-flex;
     align-items: center;
     gap: var(--dj-space-2);
+    margin-top: var(--dj-space-3);
+  }
+  .act-links-empty {
     font-family: var(--dj-font-mono);
     font-size: var(--dj-text-xs);
     letter-spacing: var(--dj-tracking-label);
     text-transform: uppercase;
-    text-decoration: none;
-    color: var(--dj-text);
-    border: var(--dj-border-width) solid var(--dj-border);
-    border-radius: var(--dj-radius-sm);
-    padding: var(--dj-space-2) var(--dj-space-3);
-    transition: color var(--dj-dur-fast) var(--dj-ease), border-color var(--dj-dur-fast) var(--dj-ease);
+    color: var(--dj-text-muted);
   }
-  .platform-link svg { flex-shrink: 0; }
-  .platform-link:hover, .platform-link:focus-visible {
-    color: var(--dj-accent-hi);
-    border-color: var(--dj-accent-deep);
-  }
+  .act-skeleton-marker { width: 2ch; height: 1em; }
 
   /* ---- Listen ---- */
   .listen-card {
@@ -294,21 +206,20 @@
     font-family: var(--dj-font-mono);
     color: var(--dj-accent);
   }
+  .link-quiet {
+    font-family: var(--dj-font-mono);
+    font-size: var(--dj-text-sm);
+    letter-spacing: var(--dj-tracking-label);
+    text-transform: uppercase;
+    text-decoration: none;
+    color: var(--dj-text-muted);
+    border-bottom: var(--dj-border-width) solid transparent;
+    transition: color var(--dj-dur-fast) var(--dj-ease), border-color var(--dj-dur-fast) var(--dj-ease);
+  }
+  .link-quiet:hover, .link-quiet:focus-visible { color: var(--dj-text); border-color: currentColor; }
   .listen-note {
     display: inline-block;
     border-bottom: none;
-  }
-  .act-loading {
-    font-family: var(--dj-font-mono);
-    font-size: var(--dj-text-sm);
-    color: var(--dj-text-muted);
-  }
-  .act-links-empty {
-    font-family: var(--dj-font-mono);
-    font-size: var(--dj-text-xs);
-    letter-spacing: var(--dj-tracking-label);
-    text-transform: uppercase;
-    color: var(--dj-text-muted);
   }
 
   /* ---- Studio teaser ---- */
@@ -323,17 +234,6 @@
     padding: var(--dj-space-5) var(--dj-space-6);
   }
   .studio-teaser p { margin: 0; color: var(--dj-text-muted); max-width: 56ch; }
-  .tag-soon {
-    flex-shrink: 0;
-    font-family: var(--dj-font-mono);
-    font-size: var(--dj-text-xs);
-    letter-spacing: var(--dj-tracking-label);
-    text-transform: uppercase;
-    color: var(--dj-text-muted);
-    border: var(--dj-border-width) solid var(--dj-border);
-    border-radius: var(--dj-radius-full);
-    padding: var(--dj-space-1) var(--dj-space-3);
-  }
 
   footer {
     margin-top: var(--dj-space-9);
@@ -362,39 +262,39 @@
 </style>
 </head>
 <body>
-<img class="bg-mark" src="assets/djaunt-icon-gold.svg" alt="" aria-hidden="true">
 
-<nav class="nav">
+<div class="nav">
   <a class="nav-brand" href="#top" aria-label="Djaunt Audio">
     <img src="assets/djaunt-wordmark-gold.svg" alt="Djaunt Audio">
   </a>
-  <div class="nav-links">
-    <a href="#about">About</a>
-    <a href="#acts">Acts</a>
-    <a href="#listen">Listen</a>
-    <a href="#studio">Studio</a>
-  </div>
-</nav>
+  <nav class="dj-section-nav" aria-label="Section navigation">
+    <a class="dj-section-nav-link" href="#about" data-dj-nav-target="about">About</a>
+    <a class="dj-section-nav-link" href="#acts" data-dj-nav-target="acts">Acts</a>
+    <a class="dj-section-nav-link" href="#listen" data-dj-nav-target="listen">Listen</a>
+    <a class="dj-section-nav-link" href="#studio" data-dj-nav-target="studio">Studio</a>
+  </nav>
+</div>
 
 <div class="wrap" id="top">
 
-  <section class="hero">
-    <p class="eyebrow">Writer, performer, engineer</p>
-    <h1>Djaunt Audio</h1>
-    <p class="lede">
+  <header class="dj-hero">
+    <img class="dj-hero-mark" src="assets/djaunt-icon-gold.svg" alt="" aria-hidden="true">
+    <p class="dj-hero-kicker">Writer, performer, engineer</p>
+    <h1 class="dj-hero-title">Djaunt Audio</h1>
+    <p class="dj-hero-lede">
       One person, three projects. I've written and performed most of what's
       here, and engineered all of it — my own material as Djaunt, and years
       of records with We All Perish and Gongonzabar Farbin and the Fernando
       Poos. This is where all of it lives in one place.
     </p>
-    <div class="hero-ctas">
-      <a class="btn-primary" href="#listen">
+    <div class="dj-hero-actions">
+      <a class="dj-button dj-button-primary" href="#listen">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg>
         Listen now
       </a>
-      <a class="link-quiet" href="#acts">See the acts &darr;</a>
+      <a class="dj-button dj-button-ghost" href="#acts">See the acts</a>
     </div>
-  </section>
+  </header>
 
   <section id="about" class="section-pad">
     <div class="section-head">
@@ -457,9 +357,31 @@
       <span class="section-index">02</span>
       <h2>The acts</h2>
     </div>
-    <div class="acts" id="acts-list">
-      <p class="act-loading">Loading acts…</p>
-    </div>
+    <ul class="dj-divided-list dj-divided-list-marked acts" id="acts-list">
+      <li class="dj-divided-item" aria-hidden="true">
+        <span class="dj-divided-item-marker"><span class="dj-skeleton dj-skeleton-badge act-skeleton-marker"></span></span>
+        <div class="dj-divided-item-body">
+          <div class="dj-skeleton dj-skeleton-title" style="width:30%"></div>
+          <div class="dj-skeleton dj-skeleton-text"></div>
+          <div class="dj-skeleton dj-skeleton-text" style="width:55%"></div>
+        </div>
+      </li>
+      <li class="dj-divided-item" aria-hidden="true">
+        <span class="dj-divided-item-marker"><span class="dj-skeleton dj-skeleton-badge act-skeleton-marker"></span></span>
+        <div class="dj-divided-item-body">
+          <div class="dj-skeleton dj-skeleton-title" style="width:45%"></div>
+          <div class="dj-skeleton dj-skeleton-text"></div>
+          <div class="dj-skeleton dj-skeleton-text" style="width:65%"></div>
+        </div>
+      </li>
+      <li class="dj-divided-item" aria-hidden="true">
+        <span class="dj-divided-item-marker"><span class="dj-skeleton dj-skeleton-badge act-skeleton-marker"></span></span>
+        <div class="dj-divided-item-body">
+          <div class="dj-skeleton dj-skeleton-title" style="width:38%"></div>
+          <div class="dj-skeleton dj-skeleton-text" style="width:40%"></div>
+        </div>
+      </li>
+    </ul>
   </section>
 
   <section id="listen" class="section-pad">
@@ -488,7 +410,7 @@
         DAW project templates, plugin chains, and the configs behind these
         mixes are landing in this repo next.
       </p>
-      <span class="tag-soon">In progress</span>
+      <span class="dj-badge dj-badge-pill dj-badge-accent">In progress</span>
     </div>
   </section>
 
@@ -508,6 +430,8 @@
     "default": '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 17H7A5 5 0 0 1 7 7h2"/><path d="M15 7h2a5 5 0 1 1 0 10h-2"/><line x1="8" y1="12" x2="16" y2="12"/></svg>'
   };
 
+  var ACCENTS = ['var(--dj-accent-2)', 'var(--dj-accent-3)', 'var(--dj-accent-4)'];
+
   function iconFor(platform) {
     return ICONS[String(platform || '').toLowerCase()] || ICONS["default"];
   }
@@ -515,35 +439,43 @@
   function renderActs(acts) {
     var wrap = document.getElementById('acts-list');
     wrap.innerHTML = '';
-    (acts || []).forEach(function (act) {
-      var card = document.createElement('article');
-      card.className = 'act-card';
+    (acts || []).forEach(function (act, i) {
+      var item = document.createElement('li');
+      item.className = 'dj-divided-item';
 
-      var head = document.createElement('div');
-      head.className = 'act-head';
+      var marker = document.createElement('span');
+      marker.className = 'dj-divided-item-marker';
+      marker.style.color = ACCENTS[i % ACCENTS.length];
+      marker.textContent = String(i + 1).padStart(2, '0');
+      item.appendChild(marker);
+
+      var body = document.createElement('div');
+      body.className = 'dj-divided-item-body';
+
       var h3 = document.createElement('h3');
       h3.textContent = act.name || '';
-      var role = document.createElement('span');
-      role.className = 'act-role';
-      role.textContent = act.role || '';
-      head.appendChild(h3);
-      head.appendChild(role);
-      card.appendChild(head);
+      body.appendChild(h3);
+
+      if (act.role) {
+        var role = document.createElement('span');
+        role.className = 'act-role';
+        role.textContent = act.role;
+        body.appendChild(role);
+      }
 
       if (act.description) {
         var desc = document.createElement('p');
-        desc.className = 'act-desc';
         desc.textContent = act.description;
-        card.appendChild(desc);
+        body.appendChild(desc);
       }
 
       var linksWrap = document.createElement('div');
-      linksWrap.className = 'platform-links';
+      linksWrap.className = 'act-links';
       var links = act.links || [];
       if (links.length) {
         links.forEach(function (link) {
           var a = document.createElement('a');
-          a.className = 'platform-link';
+          a.className = 'dj-button dj-button-ghost dj-button-small';
           a.href = link.url;
           a.target = '_blank';
           a.rel = 'noopener';
@@ -559,9 +491,10 @@
         empty.textContent = 'Links coming soon';
         linksWrap.appendChild(empty);
       }
-      card.appendChild(linksWrap);
+      body.appendChild(linksWrap);
 
-      wrap.appendChild(card);
+      item.appendChild(body);
+      wrap.appendChild(item);
     });
   }
 
@@ -587,7 +520,7 @@
     })
     .catch(function (err) {
       var wrap = document.getElementById('acts-list');
-      wrap.innerHTML = '<p class="act-loading">Couldn\'t load data/links.json — check the file is valid JSON.</p>';
+      wrap.innerHTML = '<li class="dj-divided-item act-links-empty">Couldn\'t load data/links.json — check the file is valid JSON.</li>';
       console.error('Could not load data/links.json', err);
     });
 })();
